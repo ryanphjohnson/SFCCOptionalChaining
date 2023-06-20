@@ -6,23 +6,25 @@
  */
 
 module.exports = function (obj) {
-    const allArgs = arguments; // arguments is actually an object gallavanting around like an array
+    const argv = arguments; // arguments is actually an object gallavanting around like an array
     const chain = [];
 
     // Build chain of properties to call
     Object.keys(arguments).forEach(function (key) {
         if (Number(key) === 0) return;
 
-        chain.push(allArgs[key]);
+        chain.push(argv[key]);
     });
 
     return dig(obj, chain);
 
     function dig (obj, chain) {
-        if (!chain.length || obj === null || obj === undefined) { // Check if there is more digging to do
-            return obj || undefined;
+        if (!chain.length) { // Check if there is more digging to do
+            return obj;
+        } else if (obj === null || obj === undefined) { // If we still need to dig, but the object is null or undefined
+            return undefined;
         }
-        
+
         const attr = chain.shift(); // Grab the next property from the chain of properties to check
 
         // If the attribute exists in the object, use that attribute to continue going down the chian. If it doesn't, return undefined.
